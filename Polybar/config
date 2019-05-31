@@ -1,0 +1,304 @@
+;==========================================================
+;
+;
+;   ██████╗  ██████╗ ██╗  ██╗   ██╗██████╗  █████╗ ██████╗
+;   ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+;   ██████╔╝██║   ██║██║   ╚████╔╝ ██████╔╝███████║██████╔╝
+;   ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
+;   ██║     ╚██████╔╝███████╗██║   ██████╔╝██║  ██║██║  ██║
+;   ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+;
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/jaagr/polybar
+;
+;   The README contains alot of information
+;
+;==========================================================
+[global/wm]
+margin-top = 100
+margin-bottom = 100
+
+
+[colors]
+fg = ${xrdb:color7}
+modfg = ${xrdb:color1}
+bg = ${xrdb:color0}
+
+white = #d1d1d1
+gray = #585858
+black = #ce1d1d1d
+red = #c795ae
+blue = #95aec7
+yellow = #c7ae95
+green = #aec795
+
+[bar/bar1]
+width = 100%
+height = 47
+top = true
+fixed-center = false
+
+
+;border-top-size = 1  # creating top border space
+;offset-y = -3   # aligning tray icons with rest of bar
+;monitor = ${env:MONITOR:}
+
+
+background = #000f0f0f # This is the hexcode for transparency (also used in powermenu)
+foreground = #c4b7c5
+
+
+overline-size = 2
+overline-color = ${colors.white}
+underline-size = 4
+underline-color = ${colors.white}
+
+spacing = 1
+padding-left = 0
+padding-right = 10
+module-margin-left = 0
+module-margin-right = 0
+
+
+
+font-0 = Noto Sans:pixelsize=13;0
+font-1 = Hack Nerd Font:size=13;1
+font-2 = Weather Icons:size=13;-2
+font-3 = Font Awesome:size=12;-2
+
+modules-left = i3 weathermap
+modules-center = 
+modules-right = pulseaudio date mpd
+
+tray-position = right
+tray-maxsize = 17
+tray-background = #000f0f0f
+tray-foreground= #000f0f0f
+
+;wm-restack = i3
+
+scroll-up = i3wm-wsnext
+scroll-down = i3wm-wsprev
+
+;==============
+; MODULES     ;
+;==============
+
+[module/i3]
+type = internal/i3
+
+pin-workspaces = true
+strip-wsnumbers = true
+index-sort = true
+enable-scroll = false
+
+format = <label-state> 
+format-padding-right = 2
+
+label-unfocused-foreground = #8a7f8f
+label-unfocused-padding = 1
+
+label-focused-foreground = #c16772
+label-focused-padding = 1
+
+label-urgent-foreground = #e4b226
+label-urgent-padding = 1
+
+
+;[module/xwindow]
+;type = internal/xwindow
+;label = %title:0:120:...%
+;label-padding = 4
+;===================
+;          NETWORK             ;
+;===================
+
+[module/eth]
+type = internal/network
+interface = ens33
+interval = 3.0
+
+format-connected-underline = #55aa55
+format-connected-prefix = ""
+format-connected-prefix-foreground = ${colors.foreground-alt}
+;format-connected-prefix-background = ${colors.back2}
+label-connected = " %local_ip%  "
+
+
+;format-disconnected =
+;format-disconnected = <label-disconnected>
+;format-disconnected-underline = ${self.format-connected-underline}
+;label-disconnected = %ifname% disconnected
+;label-disconnected-foreground = ${colors.foreground-alt}
+
+[module/pub-ip]
+type = custom/script
+exec = /home/dEv0iD/.config/polybar/pub-ip.sh
+interval = 10
+label = " %output%  "
+label-foreground = ${colors.foreground-alt}
+;label-background = ${colors.back2}
+
+;===================
+;          DAILY                    ;
+;===================
+
+
+[module/weathermap]
+type = custom/script
+exec = ~/.config/polybar/weather.sh
+interval = 600
+label-font = 3
+
+[module/date]
+type = internal/date
+interval = 1.0
+; if `date-alt` or `time-alt` is defined, clicking
+; the module will toggle between formats
+date = %a %b %d,
+
+; Optional time format
+time = %H:%M
+
+label =  %date%  %time%
+format  =      <label>
+format-background = #000f0f0f 
+format-padding = 3
+
+;[module/padding]
+;type = custom/text
+;content = 	 
+;content-foreground = #00000000
+;content-background = #55000000
+
+
+[settings]
+
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+
+;===================
+;          MUSIC                   ;
+;===================
+[module/pulseaudio]
+type = internal/pulseaudio
+; List sinks via `pactl list sinks` and look at the Name field
+
+sink = alsa_output.pci-0000_02_02.0.analog-stereo
+;interval = 1
+
+format-volume-padding = 2
+format-volume = <ramp-volume> <label-volume>
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
+
+format-muted-padding = 2
+label-muted =  0%
+
+[module/mpd]
+type = internal/mpd
+format-online = <label-song> <bar-progress><icon-prev> <toggle> <icon-next>
+host = 127.0.0.1
+port = 6600
+interval = 2
+
+icon-prev = 丹
+icon-stop = 栗
+icon-play = 契
+icon-pause = 
+icon-next = 
+
+label-song = %title% - %album-artist%
+label-song-ellipsis = false
+label-offline = ﮙ  mpd is offline
+bar-progress-indicator = 
+bar-progress-width = 10
+bar-progress-fill = _
+bar-progress-empty = _
+
+;  
+;[module/pulseaudio]
+;type = internal/pulseaudio
+;format-volume = <label-volume> <bar-volume>
+;label-volume = 
+;label-volume-foreground = ${root.foreground}
+;label-volume-foreground = #d8d3cc
+
+;label-muted = ﳌ muted
+;label-muted-foreground = #666
+
+;bar-volume-width = 10
+;bar-volume-foreground-0 = #768661
+;bar-volume-foreground-1 = #beb654
+;bar-volume-foreground-2 = #beb654
+;bar-volume-foreground-3 = #d8d3cc
+;bar-volume-foreground-4 = #97938e
+;bar-volume-foreground-5 = #64632d
+;bar-volume-foreground-6 = #5e5f52
+;bar-volume-gradient = true
+;bar-volume-indicator = ﰌ
+;bar-volume-indicator-font = 2
+;bar-volume-fill = ─
+;bar-volume-fill-font = 2
+;bar-volume-empty = ─
+;bar-volume-empty-font = 2
+;bar-volume-empty-foreground = ${colors.foreground-alt}
+
+
+[module/cmus]
+type = custom/script
+exec = ~/.config/polybar/Scripts/cmus.sh
+interval = 1
+click-left = cmus-remote -n
+click-right = cmus-remote -r
+click-middle = cmus-remote -u
+;format-prefix = "    "
+format = <label>
+;format-background = ${colors.back5}
+;format-foreground = ${colors.foreground-alt}
+
+
+;===================
+;          DISABLED             ;
+;===================
+;[module/powermenu]
+;type = custom/menu
+
+;label-open =   
+;label-open-background = #dd0000
+;label-open-foreground = #fff
+;label-close = cancel
+;label-close-background = #dd0000
+;label-close-foreground = #fff
+;label-open-padding = 4 
+;label-close-padding = 3 
+
+;menu-0-0 = reboot
+;menu-0-0-exec = menu-open-1
+;menu-0-1 = power off
+;menu-0-1-exec = menu-open-2
+;menu-0-0-padding = 3
+;menu-0-1-padding = 3
+
+;menu-1-0 = reboot?  
+;menu-1-0-exec = sudo reboot
+;menu-1-0-padding = 3
+
+;menu-2-0 = power off?  
+;menu-2-0-exec = sudo poweroff
+;menu-2-0-padding = 3
+
+
+;=============================================
+;[global/wm]
+
+;margin-top = 5
+;margin-bottom = 5
+; vim:ft=datapimp
+;=============================================
+
